@@ -1,6 +1,5 @@
-name: Deploy WordPress to EC2
+name: Deploy WordPress to EC2 (Beginner Friendly)
 
-# Trigger on push to main branch
 on:
   push:
     branches:
@@ -11,23 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repo
+      # Step 1: Get latest code from GitHub
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Connect to EC2 and run deploy.sh
-      - name: Deploy to EC2
+      # Step 2: SSH into EC2 and deploy
+      - name: Deploy to EC2 using deploy.sh
         uses: appleboy/ssh-action@v0.1.6
         with:
-          host: ${{ secrets.EC2_HOST }}       # Elastic IP of EC2
-          username: ${{ secrets.EC2_USER }}   # root or ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}     # private key
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            cd /var/www/html/
-            git pull origin main
-
-            
-            # cd ~/wordpress-self-project
-            # ./deploy.sh
-
+            cd ~/wordpress-self-project
+            chmod +x deploy.sh
+            ./deploy.sh
